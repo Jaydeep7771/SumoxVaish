@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import Intro from './components/Intro.jsx';
+import MusicToggle from './components/MusicToggle.jsx';
 import Hero from './components/Hero.jsx';
 import SectionHead from './components/SectionHead.jsx';
 import Story from './components/Story.jsx';
@@ -48,6 +49,9 @@ export default function App() {
   return (
     <>
       {introDone ? null : <Intro onDone={finishIntro} />}
+
+      {/* Starts on the envelope click -- the gesture browsers require. */}
+      <MusicToggle start={introDone} />
 
       <div className="page">
         <Hero />

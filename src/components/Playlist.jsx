@@ -1,12 +1,24 @@
 import { useEffect, useState } from 'react';
 import Reveal from './Reveal.jsx';
 import { supabase, isConfigured, friendlyError } from '../supabase.js';
+import { getToken, getOwnerHash } from '../owner.js';
 
 export default function Playlist() {
   const [songs, setSongs] = useState([]);
   const [form, setForm] = useState({ title: '', by: '' });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  const [myHash, setMyHash] = useState(null);
+
+  useEffect(() => {
+    let live = true;
+    getOwnerHash().then((h) => {
+      if (live) setMyHash(h);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!isConfigured) return;
@@ -15,7 +27,7 @@ export default function Playlist() {
 
     supabase
       .from('songs')
-      .select('id, title, by_name')
+      .select('id, title, by_name, owner_hash')
       .order('created_at', { ascending: false })
       .limit(200)
       .then(({ data, error: err }) => {
@@ -32,6 +44,14 @@ export default function Playlist() {
           setSongs((prev) =>
             prev.some((s) => s.id === payload.new.id) ? prev : [payload.new, ...prev]
           );
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'songs' },
+        (payload) => {
+          if (!live) return;
+          setSongs((prev) => prev.filter((s) => s.id !== payload.old.id));
         }
       )
       .subscribe();
@@ -51,7 +71,7 @@ export default function Playlist() {
 
     const { data, error: err } = await supabase
       .from('songs')
-      .insert({ title, by_name: form.by.trim() || 'A guest' })
+      .insert({ title, by_name: form.by.trim() || 'A guest', owner_hash: myHash })
       .select()
       .single();
 
@@ -65,7 +85,26 @@ export default function Playlist() {
     setSending(false);
   }
 
+  async function remove(id) {
+    const token = getToken();
+    if (!token) return;
+
+    const before = songs;
+    setSongs((prev) => prev.filter((s) => s.id !== id)); // optimistic
+
+    const { data, error: err } = await supabase.rpc('delete_song', {
+      p_id: id,
+      p_token: token,
+    });
+
+    if (err || data === false) {
+      setSongs(before);
+      setError('Could not remove that song.');
+    }
+  }
+
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+  const isMine = (s) => Boolean(myHash) && s.owner_hash === myHash;
 
   return (
     <div className="wall-wrap">
@@ -75,6 +114,17 @@ export default function Playlist() {
             <span className="note-ico">♪</span>
             <span className="s-title">{s.title}</span>
             <span className="s-by">{s.by_name}</span>
+            {isMine(s) ? (
+              <button
+                type="button"
+                className="remove remove--inline"
+                onClick={() => remove(s.id)}
+                aria-label={`Remove your song: ${s.title}`}
+                title="Remove your song"
+              >
+                ×
+              </button>
+            ) : null}
           </li>
         ))}
       </ul>

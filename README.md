@@ -70,6 +70,37 @@ Still worth knowing: **there is no rate limiting**. Anyone with the link can ins
 like. For a wedding site shared with invited guests that is usually fine, but if the link spreads
 further, add a Postgres rate limit or put Cloudflare Turnstile in front of the insert.
 
+### Removing an entry
+
+Each browser keeps a random token in `localStorage`; only its SHA-256 is stored on the row. A
+cross appears on entries that browser posted, and removal goes through the `delete_wish` /
+`delete_song` functions, which re-check the hash.
+
+There is still **no DELETE policy** on either table. An open one would let any visitor wipe the
+wall, so the functions are the only route and they refuse without the matching token (verified:
+wrong token and short token both return false and leave the row).
+
+Two consequences worth knowing:
+
+- Clearing site data, or switching browser or device, loses the token -- and with it the ability
+  to remove an earlier entry. The couple can still delete anything from the dashboard.
+- Wishes posted **before** this was added have no owner, so no cross shows on them at all.
+- Supabase's linter flags these two functions as "SECURITY DEFINER callable by anon". That is
+  deliberate: `SECURITY DEFINER` is what lets them delete without an open policy, and the token
+  check inside is the guard. Switching them to `SECURITY INVOKER`, as the linter suggests, would
+  simply stop deletion working.
+
+### Music
+
+The envelope click starts `src/assets/love-theme.mp3` and a Pause/Play pill appears top right.
+Browsers only allow audio after a user gesture, which is exactly why playback starts there rather
+than on load -- if a guest has already seen the intro this session there is no gesture, so the
+pill just shows "Play" until pressed. Pausing is remembered in `localStorage`.
+
+The file is a 33-second loop at 320kbps (1.2MB). It is only fetched when playback starts
+(`preload="none"`). Re-encoding to ~128kbps would cut it to roughly a quarter with no audible
+difference at background volume, if mobile data is a concern.
+
 ### Environment variables
 
 Copy `.env.example` to `.env.local` for local work, and set the same two in the Vercel project
