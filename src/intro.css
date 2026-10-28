@@ -1,0 +1,541 @@
+/* ---------------------------------------------------------------------------
+   The envelope intro.
+
+   Built from flat panels hinged with rotateX inside a shared preserve-3d
+   space -- the same way real paper folds -- rather than a WebGL scene. Text
+   stays vector-crisp at any resolution and the whole thing animates on the
+   compositor. Depth order is held by translateZ, not z-index:
+
+     back 0px  <  card 1px  <  front 20px  <  flap 21px  <  seal 26px
+--------------------------------------------------------------------------- */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(1100px 700px at 50% 38%, rgba(56, 48, 62, 0.92), transparent 62%),
+    radial-gradient(900px 600px at 80% -6%, rgba(232, 199, 192, 0.12), transparent 60%),
+    radial-gradient(760px 540px at 8% 10%, rgba(212, 168, 87, 0.09), transparent 58%),
+    var(--bg, #1C1A22);
+  transition: opacity 0.75s ease, visibility 0.75s;
+}
+
+/* Vignette, so the envelope reads as lit from above. */
+.intro::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(130% 95% at 50% 42%, transparent 44%, rgba(0, 0, 0, 0.55));
+}
+
+.intro-noise-def {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.intro-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  perspective: 1500px;
+  perspective-origin: 50% 42%;
+}
+
+/* --- the envelope ------------------------------------------------------- */
+
+.envelope {
+  --env-w: min(430px, 84vw);
+  --env-h: calc(var(--env-w) * 0.68);
+  --flap-h: calc(var(--env-h) * 0.5);
+  --env-paper: #2A2630;
+  --env-shade: #201D26;
+  --paper-edge: rgba(237, 228, 232, 0.16);
+
+  position: relative;
+  width: var(--env-w);
+  height: var(--env-h);
+  transform-style: preserve-3d;
+  cursor: pointer;
+  animation: env-float 6.5s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.envelope:focus-visible {
+  outline: 2px solid var(--rose, #E8C7C0);
+  outline-offset: 18px;
+  border-radius: 6px;
+}
+
+@keyframes env-float {
+  0%,
+  100% {
+    transform: rotateX(14deg) translateY(0) rotateZ(-0.7deg);
+  }
+  50% {
+    transform: rotateX(14deg) translateY(-15px) rotateZ(0.7deg);
+  }
+}
+
+.envelope:hover {
+  animation-play-state: paused;
+  transform: rotateX(10deg) translateY(-10px) scale(1.02);
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Paper grain. feTurbulence generates its own noise, so a flat white box
+   through the filter is enough to break up the fill. */
+.grain {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  filter: url(#paperGrain);
+  opacity: 0.3;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.env-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: -8%;
+  width: 84%;
+  height: 26px;
+  transform: translateX(-50%) translateZ(-30px);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.6), transparent 72%);
+  filter: blur(9px);
+  animation: env-shadow 6.5s ease-in-out infinite;
+}
+
+@keyframes env-shadow {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translateX(-50%) translateZ(-30px) scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: translateX(-50%) translateZ(-30px) scale(0.9);
+  }
+}
+
+.env-back,
+.env-front,
+.env-flap {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.env-back {
+  background: linear-gradient(165deg, var(--env-shade), #191620);
+  border-radius: 5px;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.45);
+}
+
+/* --- front pocket ------------------------------------------------------- */
+
+.env-front {
+  transform: translateZ(20px);
+  background: linear-gradient(168deg, #2E2935 0%, var(--env-paper) 58%, var(--env-shade) 100%);
+  border-radius: 5px;
+  border: 1px solid var(--paper-edge);
+  box-shadow:
+    0 26px 54px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+/* The three seams of a real pocket: two side folds and the bottom fold. */
+.fold {
+  position: absolute;
+  pointer-events: none;
+}
+
+.fold-left,
+.fold-right {
+  top: 0;
+  width: 52%;
+  height: 100%;
+}
+
+.fold-left {
+  left: 0;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.045), transparent);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fold-right {
+  right: 0;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  background: linear-gradient(270deg, rgba(255, 255, 255, 0.045), transparent);
+}
+
+.fold-bottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 54%;
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), transparent 72%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.env-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 11%;
+  text-align: center;
+  padding: 0 14px;
+}
+
+.env-invited {
+  margin: 0;
+  font-family: var(--serif, Georgia, serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 6.2vw, 2.1rem);
+  letter-spacing: 0.02em;
+  color: var(--ink-strong, #F8F3F6);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.env-flourish {
+  display: block;
+  margin: 5px 0;
+  font-size: 0.6rem;
+  color: var(--gold, #D4A857);
+}
+
+.env-to {
+  margin: 0;
+  font-family: var(--sans, system-ui, sans-serif);
+  font-weight: 400;
+  font-size: clamp(0.56rem, 2.1vw, 0.68rem);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-faint, #A095A6);
+}
+
+/* --- flap --------------------------------------------------------------- */
+
+.env-flap {
+  height: var(--flap-h);
+  transform-origin: top center;
+  transform: translateZ(21px) rotateX(0deg);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(185deg, #312B38 0%, var(--env-paper) 42%, var(--env-shade) 100%);
+  border-radius: 5px 5px 0 0;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+  transition: transform 0.95s cubic-bezier(0.62, -0.18, 0.3, 1.02);
+}
+
+/* The underside once it has swung past vertical. */
+.env-flap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  clip-path: inherit;
+  background: linear-gradient(185deg, #1B1821, #262129);
+  opacity: 0;
+  transition: opacity 0.3s ease 0.42s;
+}
+
+.intro--opening .env-flap,
+.intro--rising .env-flap,
+.intro--expanding .env-flap,
+.intro--gone .env-flap {
+  transform: translateZ(-2px) rotateX(-172deg);
+}
+
+.intro--opening .env-flap::after,
+.intro--rising .env-flap::after,
+.intro--expanding .env-flap::after,
+.intro--gone .env-flap::after {
+  opacity: 1;
+}
+
+/* --- wax seal ----------------------------------------------------------- */
+
+.seal {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--flap-h) - 34px);
+  width: 68px;
+  height: 68px;
+  transform: translateX(-50%) translateZ(26px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Irregular edge -- wax never pools into a clean circle. */
+  border-radius: 48% 52% 46% 54% / 52% 46% 54% 48%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 248, 230, 0.5), transparent 44%),
+    radial-gradient(circle at 70% 76%, rgba(0, 0, 0, 0.42), transparent 52%),
+    linear-gradient(150deg, #E6BE72, var(--gold, #D4A857) 56%, #A87F36);
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    inset 0 -2px 6px rgba(92, 60, 12, 0.45),
+    inset 0 2px 5px rgba(255, 245, 220, 0.42);
+  transition: transform 0.5s cubic-bezier(0.3, -0.5, 0.4, 1), opacity 0.45s ease;
+}
+
+.seal-mono {
+  font-family: var(--serif, Georgia, serif);
+  font-weight: 600;
+  font-size: 0.98rem;
+  letter-spacing: 0.02em;
+  color: rgba(28, 26, 34, 0.82);
+  text-shadow: 0 1px 0 rgba(255, 245, 220, 0.3);
+}
+
+.intro--breaking .seal {
+  transform: translateX(-50%) translateZ(30px) scale(1.14) rotate(-7deg);
+}
+
+.intro--opening .seal,
+.intro--rising .seal,
+.intro--expanding .seal,
+.intro--gone .seal {
+  transform: translateX(-50%) translateZ(40px) translateY(78px) rotate(-26deg) scale(0.8);
+  opacity: 0;
+}
+
+/* --- the card ----------------------------------------------------------- */
+
+.card {
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  width: 90%;
+  height: 86%;
+  transform: translateX(-50%) translateZ(1px) translateY(0);
+  background: linear-gradient(170deg, #322C3A, #272230);
+  border: 1px solid rgba(237, 228, 232, 0.16);
+  border-radius: 3px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  transition:
+    transform 1.05s cubic-bezier(0.22, 0.9, 0.24, 1),
+    opacity 0.7s ease;
+}
+
+.card-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px 16px;
+  /* Only the top strip clears the pocket while rising, so the detail below
+     stays hidden until the card is clear of the envelope. */
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.intro--rising .card-inner,
+.intro--expanding .card-inner {
+  opacity: 1;
+}
+
+.card-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--sans, system-ui, sans-serif);
+  font-weight: 500;
+  font-size: 0.56rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--rose, #E8C7C0);
+}
+
+.card-names {
+  margin: 0;
+  font-family: var(--serif, Georgia, serif);
+  font-weight: 500;
+  line-height: 0.96;
+  font-size: clamp(1.9rem, 8.5vw, 2.9rem);
+  color: var(--ink-strong, #F8F3F6);
+}
+
+.card-amp {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.42em;
+  margin: 0.1em 0;
+  color: var(--rose, #E8C7C0);
+}
+
+.card-rule {
+  display: block;
+  width: 54px;
+  height: 1px;
+  margin: 14px 0 12px;
+  background: linear-gradient(90deg, transparent, var(--gold, #D4A857), transparent);
+}
+
+.card-date {
+  margin: 0;
+  font-family: var(--serif, Georgia, serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink-soft, #B6AAB4);
+}
+
+.card-place {
+  margin: 5px 0 0;
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: 0.55rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-faint, #A095A6);
+}
+
+.intro--rising .card {
+  transform: translateX(-50%) translateZ(30px) translateY(-62%);
+  box-shadow: 0 34px 70px rgba(0, 0, 0, 0.7);
+}
+
+/* The card becomes the page. */
+.intro--expanding .card,
+.intro--gone .card {
+  transform: translateX(-50%) translateZ(30px) translateY(-62%) scale(16);
+  opacity: 0;
+  transition:
+    transform 1.1s cubic-bezier(0.6, 0, 0.9, 0.5),
+    opacity 0.85s ease 0.25s;
+}
+
+/* --- cue, skip, exit ---------------------------------------------------- */
+
+.intro-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 54px 0 0;
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint, #A095A6);
+  transition: opacity 0.4s ease;
+}
+
+.intro-cue-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rose, #E8C7C0);
+  animation: cue-bob 1.9s ease-in-out infinite;
+}
+
+@keyframes cue-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.intro-skip {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  background: none;
+  border: none;
+  padding: 10px 14px;
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: 0.62rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-faint, #A095A6);
+  cursor: pointer;
+  transition: color 0.25s ease, opacity 0.4s ease;
+}
+
+.intro-skip:hover {
+  color: var(--rose, #E8C7C0);
+}
+
+.intro--breaking .intro-cue,
+.intro--opening .intro-cue,
+.intro--rising .intro-cue,
+.intro--expanding .intro-cue,
+.intro--breaking .intro-skip,
+.intro--opening .intro-skip,
+.intro--rising .intro-skip,
+.intro--expanding .intro-skip {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro--expanding {
+  background: transparent;
+  transition: background 0.9s ease;
+}
+
+.intro--expanding::after {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.intro--gone {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Scroll lock while the intro is up. */
+html.intro-open,
+html.intro-open body {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .envelope,
+  .env-shadow,
+  .intro-cue-dot {
+    animation: none;
+  }
+  .envelope {
+    transform: rotateX(14deg);
+  }
+  .intro,
+  .env-flap,
+  .seal,
+  .card,
+  .card-inner {
+    transition: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .intro-cue {
+    margin-top: 38px;
+  }
+  .seal {
+    width: 58px;
+    height: 58px;
+    top: calc(var(--flap-h) - 29px);
+  }
+  .seal-mono {
+    font-size: 0.84rem;
+  }
+}
