@@ -108,6 +108,11 @@ export default function Playlist() {
 
   return (
     <div className="wall-wrap">
+      {songs.length === 0 ? (
+        <Reveal className="wall-empty">
+          No songs yet — add the first one to the dance floor.
+        </Reveal>
+      ) : null}
       <ul className="songs">
         {songs.map((s) => (
           <li className="song" key={s.id}>
