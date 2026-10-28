@@ -15,12 +15,38 @@ locally is real data on the shared wall.
 
 ## Deploy
 
+### 1. Push to GitHub
+
+The repo is initialised with one commit and nothing secret in it. Create an empty repo on GitHub,
+then:
+
 ```bash
-npx vercel
+git remote add origin https://github.com/<you>/<repo>.git
+git branch -M main
+git push -u origin main
 ```
 
-Vercel picks up `vercel.json`: Vite builds to `dist/` and everything is served as a static SPA.
-Set the two environment variables above before the first deploy, or the wall will come up offline.
+### 2. Import into Vercel
+
+On vercel.com choose **Add New -> Project** and pick the repo. Vercel reads `vercel.json` and
+needs no manual build settings (framework Vite, build `npm run build`, output `dist`).
+
+**Before the first deploy**, add the two variables from `.env.example` under
+**Settings -> Environment Variables**, for Production, Preview and Development:
+
+```
+VITE_SUPABASE_URL
+VITE_SUPABASE_PUBLISHABLE_KEY
+```
+
+They are baked in at build time, so adding them later means redeploying. Without them the site
+still loads and the wall just reports "The wall is offline".
+
+### 3. After the domain is live
+
+Open `index.html` and make the two `og:image` / `twitter:image` URLs absolute
+(`https://yourdomain/og-image.jpg`). Some link scrapers will not resolve a relative image, and
+this link mostly travels by WhatsApp.
 
 ## Backend (Supabase)
 
@@ -68,16 +94,29 @@ are permanent.
 ## Layout
 
 ```
-index.html           page shell, Google Fonts
-src/App.jsx          section order
-src/styles.css       all styling (theme tokens at the top)
-src/useReveal.js     scroll-in animation
-src/intro.css        the envelope intro
-src/supabase.js      Supabase client + config guard
-src/data/events.js   event list + countdown target
-src/assets/          proposal photos
-src/components/      Intro, Hero, Story, Proposal, Events, WishingWall, Playlist, Footer
+index.html              page shell, share meta, Google Fonts
+vercel.json             static SPA rewrite
+public/                 served at the site root, copied verbatim
+  favicon.ico           "V&S" initials -- the illustration is unreadable at 32px
+  apple-touch-icon.png
+  og-image.jpg          1200x630 WhatsApp / social card
+src/
+  App.jsx               section order, intro gate
+  styles.css            all styling (theme tokens at the top)
+  intro.css             the envelope intro
+  supabase.js           client + config guard
+  useReveal.js          scroll-in animation
+  data/events.js        event list + countdown target
+  assets/               photos and monogram, imported as modules
+  components/           Intro, Hero, Story, Proposal, Events,
+                        WishingWall, Playlist, Footer, Reveal, SectionHead
+supabase/migrations/    the schema, in the order it was applied
+assets-source/          print-resolution masters -- gitignored, not built
+docs/                   the original single-file version, for reference
 ```
+
+Anything in `src/assets` is imported as a module so Vite fingerprints it; anything in `public/`
+is served at a fixed path, which is why the favicon and share card live there.
 
 ## The envelope intro
 
@@ -121,10 +160,10 @@ Notes for anyone changing it:
 - **Events and countdown** — `src/data/events.js`.
 - **Photos** — replace `src/assets/1.jpeg`–`3.jpeg`. They are imported as modules so Vite fingerprints them; never reference them by a relative path from the page.
 - **Monogram** — `src/assets/monogram-{320,640}.{webp,jpg}`, shown by `Hero.jsx`. The master is
-  `Monogram Final.png` (11126px square, ~17MB). It is an opaque illustration on cream paper, not a
+  `assets-source/Monogram Final.png` (11126px square, ~17MB). It is an opaque illustration on cream paper, not a
   transparent mark, so it is framed as a square plate rather than cropped to a circle -- a circle
   would cut off the plane and the cat. To replace it, re-export the four sizes from the master at
   320px and 640px; WebP is what browsers actually use, the JPEGs are the fallback.
-  The master itself is not referenced by the build, so keep it out of git if the repo matters.
+  The master is gitignored, so keep your own copy backed up elsewhere.
 
-`Vaishali & Sumit.html` is the original single-file version, kept for reference. It is not part of the build.
+`docs/original-single-file.html` is the original single-file version, kept for reference. It is not part of the build.
