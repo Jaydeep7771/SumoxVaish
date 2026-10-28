@@ -14,7 +14,15 @@ const photos = [
 
 export default function Proposal() {
   return (
-    <Reveal className="proposals">
+    /* On phones this is a horizontal scroller, so it needs a name and a tab
+       stop -- otherwise a keyboard user has no way to scroll through it. */
+    <Reveal
+      className="proposals"
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Photos from the proposal"
+      tabIndex={0}
+    >
       {photos.map((p) => (
         <figure className="frame" key={p.src}>
           <img src={p.src} alt={p.alt} width="1070" height="1600" loading="lazy" decoding="async" />

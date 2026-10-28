@@ -106,7 +106,9 @@
 
   /* proposal gallery */
   .proposals{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-block:26px 10px}
-  .frame{aspect-ratio:3/4;border-radius:12px;overflow:hidden;position:relative;
+  /* figure carries a browser default margin of 1em 40px -- left in place it
+     eats 80px of width from every photo. */
+  .frame{margin:0;aspect-ratio:3/4;border-radius:12px;overflow:hidden;position:relative;
     border:1px solid var(--line);background:var(--card);
     box-shadow:0 12px 30px var(--shadow)}
   .frame .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -118,7 +120,30 @@
   .frame .ph span{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase}
   .frame img{width:100%;height:100%;object-fit:cover;display:block}
   .gallery-note{text-align:center;color:var(--ink-faint);font-size:.8rem;font-style:italic;margin:16px 0 0}
-  @media (max-width:520px){.proposals{grid-template-columns:1fr 1fr}}
+  /* On a phone, three portraits in a 2-up grid left an orphan on the second
+     row and squeezed each photo to ~157px. A swipe carousel instead: the
+     photos get most of the screen, the next one peeks past the edge so it is
+     obvious there is more, and scroll-snap makes it settle cleanly.
+
+     The widths are in vw and must stay in step -- the 11vw padding is
+     (100 - 78) / 2, which is what lets the first and last photo sit centred
+     at either end of the scroll. */
+  @media (max-width:520px){
+    .proposals{
+      display:flex;gap:14px;
+      overflow-x:auto;overflow-y:hidden;
+      scroll-snap-type:x mandatory;
+      /* Full-bleed past the page's 22px gutter so the peek reaches the edge. */
+      margin-inline:-22px;padding-inline:11vw;
+      /* Stops a horizontal swipe from triggering browser back-navigation. */
+      overscroll-behavior-x:contain;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .proposals::-webkit-scrollbar{display:none}
+    .frame{flex:0 0 78vw;scroll-snap-align:center}
+    .proposals:focus-visible{outline:2px solid var(--rose);outline-offset:4px;border-radius:14px}
+  }
 
   /* events */
   .events{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding-block:26px 44px}
