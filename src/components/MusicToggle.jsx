@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import track from '../assets/love-theme.mp3';
+/* Generic filename so swapping the track later needs no code change. */
+import track from '../assets/background-music.mp3';
 
 const PREF_KEY = 'sumoxvaish:music-off';
 

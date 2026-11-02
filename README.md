@@ -92,14 +92,16 @@ Two consequences worth knowing:
 
 ### Music
 
-The envelope click starts `src/assets/love-theme.mp3` and a Pause/Play pill appears top right.
+The envelope click starts `src/assets/background-music.mp3` and a Pause/Play pill appears top
+right. The filename is generic so swapping the track needs no code change.
 Browsers only allow audio after a user gesture, which is exactly why playback starts there rather
 than on load -- if a guest has already seen the intro this session there is no gesture, so the
 pill just shows "Play" until pressed. Pausing is remembered in `localStorage`.
 
-The file is a 33-second loop at 320kbps (1.2MB). It is only fetched when playback starts
-(`preload="none"`). Re-encoding to ~128kbps would cut it to roughly a quarter with no audible
-difference at background volume, if mobile data is a concern.
+The track is a 1m05s loop at 320kbps stereo (2.5MB). It is only fetched when playback starts
+(`preload="none"`) and streams progressively, so it begins well before the whole file arrives.
+Re-encoding to ~128kbps would cut it to roughly 1MB with no audible difference at background
+volume, which is worth doing if guests on mobile data are a concern.
 
 ### Environment variables
 
