@@ -1,15 +1,31 @@
 import Reveal from './Reveal.jsx';
 
 /* Imported as modules so Vite fingerprints them into /assets and the paths
-   resolve from any route or host -- no relative-path breakage. */
+   resolve from any route or host -- no relative-path breakage.
+   The order is the order of the evening: the question, the yes, the after. */
 import photo1 from '../assets/1.jpeg';
 import photo2 from '../assets/2.jpeg';
 import photo3 from '../assets/3.jpeg';
 
 const photos = [
-  { src: photo1, alt: 'Vaishali and Sumit on the day he asked' },
-  { src: photo2, alt: 'Vaishali and Sumit celebrating the proposal' },
-  { src: photo3, alt: 'Vaishali and Sumit together after the proposal' },
+  {
+    src: photo1,
+    width: 1370,
+    height: 2048,
+    alt: 'Sumit down on one knee, holding Vaishali’s hand, on the grass above the lake at sunset',
+  },
+  {
+    src: photo2,
+    width: 1070,
+    height: 1600,
+    alt: 'Sumit lifting Vaishali off her feet as she holds up her hand to show the ring',
+  },
+  {
+    src: photo3,
+    width: 1070,
+    height: 1600,
+    alt: 'Vaishali and Sumit sitting together among flowers, she is holding sunflowers',
+  },
 ];
 
 export default function Proposal() {
@@ -25,7 +41,14 @@ export default function Proposal() {
     >
       {photos.map((p) => (
         <figure className="frame" key={p.src}>
-          <img src={p.src} alt={p.alt} width="1070" height="1600" loading="lazy" decoding="async" />
+          <img
+            src={p.src}
+            alt={p.alt}
+            width={p.width}
+            height={p.height}
+            loading="lazy"
+            decoding="async"
+          />
         </figure>
       ))}
     </Reveal>
