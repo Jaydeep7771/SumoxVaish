@@ -190,11 +190,11 @@ Notes for anyone changing it:
 
 - **Events and countdown** — `src/data/events.js`.
 - **Photos** — replace `src/assets/1.jpeg`–`3.jpeg`. They are imported as modules so Vite fingerprints them; never reference them by a relative path from the page.
-- **Monogram** — `src/assets/monogram-{320,640}.{webp,jpg}`, shown by `Hero.jsx`. The master is
-  `assets-source/Monogram Final.png` (11126px square, ~17MB). It is an opaque illustration on cream paper, not a
-  transparent mark, so it is framed as a square plate rather than cropped to a circle -- a circle
-  would cut off the plane and the cat. To replace it, re-export the four sizes from the master at
-  320px and 640px; WebP is what browsers actually use, the JPEGs are the fallback.
-  The master is gitignored, so keep your own copy backed up elsewhere.
+- **Hero photo** — `src/assets/hero-couple-{210,420}.{webp,jpg}`, shown by `Hero.jsx`. The frame
+  is 3:4 to match the photograph; a square would crop the sky and grass. Re-export both widths
+  from the master in `assets-source/` to change it.
+- **Monogram** — no longer on the page, but still used for `public/favicon.ico`,
+  `apple-touch-icon.png` and `og-image.jpg`, which are pre-rendered files. The web sizes stay in
+  `src/assets` unused, in case it comes back.
 
 `docs/original-single-file.html` is the original single-file version, kept for reference. It is not part of the build.

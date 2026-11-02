@@ -1,31 +1,30 @@
 import Countdown from './Countdown.jsx';
 
-/* The monogram is an opaque illustration, not a flat logo, so it is served as
-   photographic formats at two widths rather than an SVG. The master file is
-   11126px square; these are built from it. */
-import monoWebp320 from '../assets/monogram-320.webp';
-import monoWebp640 from '../assets/monogram-640.webp';
-import monoJpg320 from '../assets/monogram-320.jpg';
-import monoJpg640 from '../assets/monogram-640.jpg';
+/* A 3:4 portrait, so the frame is portrait too -- a square crop would cut the
+   sunset above them and the grass below, which is most of the photograph. */
+import heroWebp210 from '../assets/hero-couple-210.webp';
+import heroWebp420 from '../assets/hero-couple-420.webp';
+import heroJpg210 from '../assets/hero-couple-210.jpg';
+import heroJpg420 from '../assets/hero-couple-420.jpg';
 
-const MONO_SIZES = '(max-width: 520px) 48vw, 250px';
+const HERO_SIZES = '(max-width: 520px) 44vw, 210px';
 
 export default function Hero() {
   return (
     <header className="hero">
-      <picture className="monogram">
+      <picture className="hero-photo">
         <source
           type="image/webp"
-          srcSet={`${monoWebp320} 320w, ${monoWebp640} 640w`}
-          sizes={MONO_SIZES}
+          srcSet={`${heroWebp210} 210w, ${heroWebp420} 420w`}
+          sizes={HERO_SIZES}
         />
         <img
-          src={monoJpg640}
-          srcSet={`${monoJpg320} 320w, ${monoJpg640} 640w`}
-          sizes={MONO_SIZES}
-          width="640"
-          height="640"
-          alt="Hand-painted V and S monogram entwined with flowers, the Toronto skyline, and Vaishali and Sumit by the lake"
+          src={heroJpg420}
+          srcSet={`${heroJpg210} 210w, ${heroJpg420} 420w`}
+          sizes={HERO_SIZES}
+          width="420"
+          height="628"
+          alt="Vaishali and Sumit running hand in hand through a meadow at sunset"
           fetchPriority="high"
         />
       </picture>
