@@ -94,9 +94,14 @@ Two consequences worth knowing:
 
 The envelope click starts `src/assets/background-music.mp3` and a Pause/Play pill appears top
 right. The filename is generic so swapping the track needs no code change.
-Browsers only allow audio after a user gesture, which is exactly why playback starts there rather
-than on load -- if a guest has already seen the intro this session there is no gesture, so the
-pill just shows "Play" until pressed. Pausing is remembered in `localStorage`.
+Browsers only allow audio after a user gesture, which is why playback starts on the envelope
+click. The intro is only shown once a session, so on a reload there is no gesture and the browser
+refuses. When that happens the player arms a one-shot listener and starts on the guest's next tap,
+click or key press, so it still feels automatic rather than leaving a Play button they must find.
+
+An explicit Pause is different: it is remembered in `localStorage` and honoured, and it also
+cancels any pending auto-start. If the music seems not to start at all, that preference is the
+first thing to check -- clear `sumoxvaish:music-off`.
 
 The track is a 1m05s loop at 320kbps stereo (2.5MB). It is only fetched when playback starts
 (`preload="none"`) and streams progressively, so it begins well before the whole file arrives.
@@ -170,23 +175,26 @@ animates on the compositor, and there is no WebGL fallback to worry about.
 
 ## Theme
 
-The palette lives in the `:root` block at the top of `src/styles.css`. Five tokens are the
-source of truth -- `--bg`, `--paper`, `--ink`, `--maroon`, `--gold` -- and everything else is
-derived from them, so a retheme means editing those five and re-checking contrast.
+The palette lives in the `:root` block at the top of `src/styles.css`. Two accents do all the
+work -- `--lavender` and `--champagne` -- and the surface and type tokens are derived around them.
 
 Notes for anyone changing it:
 
-- Surfaces are layered by **lightness** (`--bg` < `--paper` < `--panel`), not by shadow. On a dark
-  ground a drop shadow barely reads, so depth comes from the `--line` hairline instead.
-- `--maroon` is a pale blush, so anything sitting **on** it needs dark text. That is why the button
-  label is `var(--bg)` rather than white.
-- `--ink-faint` is the small uppercase caption colour and is the tightest contrast in the set.
-  It is tuned to clear WCAG AA (4.5:1) against `--panel`, the lightest surface -- 4.88:1 today.
-  Darkening it is the easiest way to fail accessibility here.
-- The envelope has its own paper tones (`--env-paper`, `--env-shade`) in `src/intro.css`, since the
-  folded panels need to separate from each other and from the page behind them.
+- **Champagne is a pale gold, so it fails contrast as small text on white.** That is why there are
+  two tokens: `--champagne` for hairlines, pins and ornament, and `--champagne-ink` (a darkened
+  version) wherever it appears as type. Do not swap one for the other.
+- Surfaces go light to lighter: `--bg` (lavender mist) < `--panel` < `--paper` (white). Depth is a
+  soft lavender-tinted shadow plus the 1px `--line` hairline, never a grey shadow.
+- `--ink-faint` is the small uppercase caption colour and is the tightest contrast in the set, at
+  4.94:1 against `--panel`, the surface where it does worst. Lightening it is the easiest way to
+  fail accessibility here.
+- The lavender button carries **white** type, not the page ground.
+- The envelope has its own champagne paper tones (`--env-paper`, `--env-shade`) in `src/intro.css`,
+  and a lavender wax seal; the panels need to separate from each other and from the page behind.
 - `index.html` carries a `theme-color` meta and paints the background before the stylesheet loads,
-  so there is no white flash on first paint.
+  so there is no flash of the wrong colour on first paint.
+- `public/og-image.jpg` and the icons are pre-rendered **files**, not CSS -- a retheme means
+  regenerating them too, or the WhatsApp card will still show the old colours.
 
 ### Editing content
 

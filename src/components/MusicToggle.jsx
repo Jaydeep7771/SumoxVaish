@@ -3,15 +3,20 @@ import { useEffect, useRef, useState } from 'react';
 import track from '../assets/background-music.mp3';
 
 const PREF_KEY = 'sumoxvaish:music-off';
+const VOLUME = 0.32;
 
 /* Background music, started by the envelope opening.
  *
  * Browsers only allow audio after a user gesture, and the envelope click is
- * exactly that -- which is why playback begins there rather than on load.
- * If the guest has already seen the intro this session there is no gesture,
- * so play() is refused and the button simply shows as paused until pressed. */
+ * exactly that. But the intro is only shown once a session, so on a reload
+ * there is no gesture and the browser refuses. Rather than leaving the guest
+ * staring at a Play button they did not ask for, a refusal arms a one-shot
+ * listener and the music starts on their next tap, click or key press.
+ *
+ * An explicit Pause is different: that is remembered and honoured. */
 export default function MusicToggle({ start }) {
   const audioRef = useRef(null);
+  const detachRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [optedOut, setOptedOut] = useState(() => {
     try {
@@ -20,24 +25,6 @@ export default function MusicToggle({ start }) {
       return false;
     }
   });
-
-  useEffect(() => {
-    if (!start || optedOut) return;
-    const el = audioRef.current;
-    if (!el) return;
-
-    el.volume = 0; // fade in, so it does not jolt
-    const attempt = el.play();
-
-    if (attempt?.catch) {
-      attempt
-        .then(() => {
-          setPlaying(true);
-          fadeTo(el, 0.32);
-        })
-        .catch(() => setPlaying(false)); // autoplay refused; guest can press play
-    }
-  }, [start, optedOut]);
 
   function fadeTo(el, target, ms = 1400) {
     const from = el.volume;
@@ -49,6 +36,58 @@ export default function MusicToggle({ start }) {
     };
     requestAnimationFrame(step);
   }
+
+  /* Drops the pending "start on next interaction" listener, if any. */
+  function disarm() {
+    if (detachRef.current) {
+      detachRef.current();
+      detachRef.current = null;
+    }
+  }
+
+  useEffect(() => {
+    if (!start || optedOut) return undefined;
+
+    const el = audioRef.current;
+    if (!el) return undefined;
+
+    let cancelled = false;
+
+    const attempt = () =>
+      el
+        .play()
+        .then(() => {
+          if (cancelled) return false;
+          setPlaying(true);
+          fadeTo(el, VOLUME);
+          return true;
+        })
+        .catch(() => false);
+
+    el.volume = 0;
+    attempt().then((ok) => {
+      if (ok || cancelled) return;
+
+      const events = ['pointerdown', 'keydown', 'touchstart'];
+      const onFirstInteraction = () => {
+        el.volume = 0;
+        attempt().then((started) => {
+          if (started) disarm();
+        });
+      };
+
+      events.forEach((e) =>
+        document.addEventListener(e, onFirstInteraction, { passive: true })
+      );
+      detachRef.current = () =>
+        events.forEach((e) => document.removeEventListener(e, onFirstInteraction));
+    });
+
+    return () => {
+      cancelled = true;
+      disarm();
+    };
+  }, [start, optedOut]);
 
   function toggle() {
     const el = audioRef.current;
@@ -65,10 +104,12 @@ export default function MusicToggle({ start }) {
           } catch {
             /* preference just will not persist */
           }
-          fadeTo(el, 0.32);
+          fadeTo(el, VOLUME);
         })
         .catch(() => setPlaying(false));
     } else {
+      /* A deliberate pause also cancels any pending auto-start. */
+      disarm();
       el.pause();
       setPlaying(false);
       setOptedOut(true);
