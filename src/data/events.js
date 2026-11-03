@@ -38,10 +38,18 @@ export const events = [
   },
   {
     mark: '☀',
-    name: 'Haldi Ceremony',
+    name: 'Haldi Milan',
     when: 'Fri · 4 Dec · 11:00 AM onwards',
     where: 'Sohi Banquets, Zirakpur, Punjab',
     dress: 'Marigold & white',
+    sides: BOTH,
+  },
+  {
+    mark: '♫',
+    name: 'Dawat-e-DJ',
+    when: 'Fri · 4 Dec · 8:00 PM onwards',
+    where: 'Clarion Inn',
+    dress: 'Dress to dance',
     sides: BOTH,
   },
   {

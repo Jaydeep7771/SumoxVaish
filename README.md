@@ -162,7 +162,8 @@ logic in a component. Today only the two Mehendis are side-specific:
 | Engagement | yes | yes |
 | Groom Mehendi & Jago | -- | yes |
 | Bride Mehendi | yes | -- |
-| Haldi Ceremony | yes | yes |
+| Haldi Milan | yes | yes |
+| Dawat-e-DJ | yes | yes |
 | The Wedding | yes | yes |
 
 Getting those values wrong sends people to the wrong house, so change them deliberately.
