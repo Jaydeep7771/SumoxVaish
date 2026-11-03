@@ -217,6 +217,12 @@
   .event .ev-where{color:var(--ink-soft);margin:8px 0 0;font-size:.95rem}
   .event .ev-dress{color:var(--ink-faint);margin:6px 0 0;font-size:.78rem}
   .event.full{grid-column:1 / -1}
+  /* The side filter changes how many cards there are, so an odd count would
+     strand the last ordinary card beside an empty cell. When the card before
+     the full-width one sits in an odd position -- meaning it would start a row
+     alone -- let it span instead. Four cards then read 2 / 1 / 1 rather than
+     2 / 1 + hole / 1. */
+  .event:nth-last-child(2):nth-child(odd){grid-column:1 / -1}
   @media (max-width:520px){.events{grid-template-columns:1fr}}
 
   /* the wall */

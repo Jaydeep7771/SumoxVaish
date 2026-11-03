@@ -46,8 +46,7 @@ export default function App() {
     }
   });
 
-  function chooseSide(next) {
-    setSide(next);
+  function persistSide(next) {
     try {
       if (next) localStorage.setItem(SIDE_KEY, next);
       else localStorage.removeItem(SIDE_KEY);
@@ -55,6 +54,26 @@ export default function App() {
       /* private mode -- the choice just will not persist */
     }
   }
+
+  function chooseSide(next) {
+    setSide(next);
+    persistSide(next);
+
+    /* Picking a side is a step forward, so give the browser something to come
+       back to -- otherwise Back would leave the site entirely and a guest who
+       picked the wrong family would have no obvious way back to the question. */
+    if (next) window.history.pushState({ sideChosen: next }, '');
+  }
+
+  useEffect(() => {
+    function onPop() {
+      /* Back out of the entry we pushed: return to the question. */
+      setSide(null);
+      persistSide(null);
+    }
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
 
   /* The question only makes sense once the envelope is open, and the page
      stays locked behind it until a side is chosen. */

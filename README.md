@@ -178,6 +178,12 @@ Notes on the pieces:
   mid-session, but it fails open rather than showing someone an empty schedule.
 - The music toggle is hidden while the question is up, then returns with the page. The track keeps
   playing through the transition -- it started on the envelope click.
+- Choosing a side pushes a history entry, so the browser **Back** button returns to the question
+  rather than leaving the site. A guest who taps the wrong family gets the obvious way back.
+- The event grid is two columns, and the side filter changes how many cards there are. An odd
+  count would strand the last ordinary card beside an empty cell, so
+  `.event:nth-last-child(2):nth-child(odd)` lets it span the full width -- four cards read
+  2 / 1 / 1. Check this rule if you add or remove an event.
 
 To see the whole sequence again, clear `sumoxvaish:side` and `sumoxvaish:intro-seen`, or open the
 site with `?intro` after clearing the side.
