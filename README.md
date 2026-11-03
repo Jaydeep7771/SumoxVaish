@@ -175,26 +175,32 @@ animates on the compositor, and there is no WebGL fallback to worry about.
 
 ## Theme
 
-The palette lives in the `:root` block at the top of `src/styles.css`. Two accents do all the
-work -- `--lavender` and `--champagne` -- and the surface and type tokens are derived around them.
+The palette lives in the `:root` block at the top of `src/styles.css`. Five values define it:
+
+```
+--bg        #F2EEF8   page base, a lavender white
+--tint      #E8E2F2   soft tint for bands and panels
+--lavender  #7460A6   primary accent
+--champagne #C6A85A   secondary, ornament
+--ink       #3E3550   text
+```
 
 Notes for anyone changing it:
 
-- **Champagne is a pale gold, so it fails contrast as small text on white.** That is why there are
-  two tokens: `--champagne` for hairlines, pins and ornament, and `--champagne-ink` (a darkened
-  version) wherever it appears as type. Do not swap one for the other.
-- Surfaces go light to lighter: `--bg` (lavender mist) < `--panel` < `--paper` (white). Depth is a
-  soft lavender-tinted shadow plus the 1px `--line` hairline, never a grey shadow.
-- `--ink-faint` is the small uppercase caption colour and is the tightest contrast in the set, at
-  4.94:1 against `--panel`, the surface where it does worst. Lightening it is the easiest way to
-  fail accessibility here.
-- The lavender button carries **white** type, not the page ground.
-- The envelope has its own champagne paper tones (`--env-paper`, `--env-shade`) in `src/intro.css`,
-  and a lavender wax seal; the panels need to separate from each other and from the page behind.
-- `index.html` carries a `theme-color` meta and paints the background before the stylesheet loads,
-  so there is no flash of the wrong colour on first paint.
+- **Both accents exist in two tones, and they are not interchangeable.** The display values are
+  too pale to read as small type, so `--champagne-ink` (#7A5C1B) is used wherever gold is text,
+  and `--lavender` is already darkened from the reference #8A76B8 to #7460A6 so that **white body
+  text on a filled lavender panel clears AA** (5.29:1 rather than 3.91:1).
+- Only pure white passes on the lavender panel. Labels there are `#F4F0FB`, which measures 4.72:1;
+  anything softer fails.
+- Surfaces go light to lighter: `--bg` < `--tint` < `--paper` (white). Depth is the 1px `--line`
+  hairline plus a lavender-tinted shadow, never grey.
+- `--ink-faint` is the small uppercase caption colour and the tightest in the set. Lightening it
+  is the easiest way to fail accessibility here.
+- Every text style is checked against its **computed** background in the browser, not against a
+  table. All 20 pass WCAG AA; the tightest are the hero eyebrow and the panel labels, both ~4.6.
 - `public/og-image.jpg` and the icons are pre-rendered **files**, not CSS -- a retheme means
-  regenerating them too, or the WhatsApp card will still show the old colours.
+  regenerating them too, or the WhatsApp card still shows the old colours.
 
 ### Editing content
 

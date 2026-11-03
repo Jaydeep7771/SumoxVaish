@@ -33,7 +33,8 @@ export default function Hero() {
         Vaishali<span className="amp">&amp;</span>Sumit
       </h1>
       <p className="names-dev">वैशाली &amp; सुमित</p>
-      <p className="hero-date">are tying the knot · 5 December 2026 · Zirakpur, Punjab</p>
+      <p className="hero-date">Sat · 5 Dec 2026 · The Grandeur, Zirakpur</p>
+      <span className="hero-rule" aria-hidden="true" />
       <Countdown />
       <div className="scroll-cue">
         <span>Scroll for our story</span>

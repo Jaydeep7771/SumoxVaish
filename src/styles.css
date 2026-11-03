@@ -1,37 +1,36 @@
-/* Vaishali & Sumit -- lavender and champagne on a light, airy ground.
-   Two accents do all the work: lavender for anything interactive or emphatic,
-   champagne for ornament. Champagne is a pale gold, so it fails contrast as
-   small text on white -- hence the separate --champagne-ink for type and
-   --champagne for hairlines, pins and other decoration. */
+/* Vaishali & Sumit -- lavender and champagne, light ground.
+   Lavender carries anything interactive or emphatic; champagne is ornament.
+   Both accents come in two tones, because the display values are too pale to
+   read as small type: --champagne / --champagne-ink and the accent darkened
+   to #7460A6 so WHITE body text clears AA on a filled lavender panel. */
   :root{
-    /* Supplied palette */
-    --lavender:#7B5EA7;      /* the primary accent */
-    --champagne:#D9B86A;     /* ornament only -- too pale for small text */
+    /* Palette */
+    --bg:#F2EEF8;            /* page base, a lavender white */
+    --tint:#E8E2F2;          /* soft tint for bands and panels */
+    --paper:#FFFFFF;         /* cards */
+    --lavender:#7460A6;      /* primary accent */
+    --lavender-soft:#8A76B8; /* lighter accent, ornament only */
+    --champagne:#C6A85A;     /* secondary, ornament only */
+    --champagne-ink:#7A5C1B; /* the same gold, dark enough to be text */
+    --ink:#3E3550;           /* ink / text */
 
-    /* Ground and surfaces, layered light to lighter */
-    --bg:#F6F2FA;            /* soft lavender mist */
-    --paper:#FFFFFF;         /* raised surface */
+    /* Surfaces and type derived from the above */
     --card:var(--paper);
-    --panel:#EFE8F7;         /* called-out panels, a touch deeper than bg */
-    --field:#FFFFFF;         /* inputs */
+    --panel:var(--tint);
+    --field:#FFFFFF;
+    --ink-strong:#2E2740;
+    --ink-soft:#5F5473;
+    --ink-faint:#6B6080;     /* captions -- holds AA on every surface */
 
-    /* Type */
-    --ink:#3A2E45;           /* deep plum ink */
-    --ink-strong:#2A2033;    /* headings */
-    --ink-soft:#665573;      /* muted body */
-    --ink-faint:#6E5E7C;     /* captions -- holds AA on every surface */
-
-    /* Accent slots used through the stylesheet */
-    --rose:var(--lavender);  /* accent lines, eyebrows, buttons */
-    --rose-deep:#5F4486;     /* deeper lavender for emphasis */
-    --sage:#8A6B22;          /* champagne, darkened enough to read as text */
-    --champagne-ink:#8A6B22;
+    /* Slots used through the stylesheet */
+    --rose:var(--lavender);
+    --rose-deep:#5E4C8A;
+    --sage:var(--champagne-ink);
     --gold:var(--champagne);
-    --blush:#F3EDFA;         /* pale lavender surface for pinned wishes */
-
-    --line:rgba(58,46,69,.14);
+    --blush:#EFE9F8;
+    --line:rgba(62,53,80,.14);
     --good:#5F9E6E;
-    --shadow:rgba(74,56,96,.14); /* lavender-tinted, not grey */
+    --shadow:rgba(62,53,80,.12);
 
     color-scheme:light;
     --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
@@ -43,8 +42,8 @@
     margin:0;font-family:var(--sans);font-weight:300;color:var(--ink);line-height:1.6;
     overflow-x:hidden;-webkit-font-smoothing:antialiased;
     background:
-      radial-gradient(900px 600px at 82% -8%, rgba(217,184,106,.16), transparent 60%),
-      radial-gradient(800px 560px at 6% 8%, rgba(155,127,191,.14), transparent 58%),
+      radial-gradient(900px 600px at 82% -8%, rgba(198,168,90,.14), transparent 60%),
+      radial-gradient(800px 560px at 6% 8%, rgba(138,118,184,.18), transparent 58%),
       var(--bg);
     background-attachment:fixed;
   }
@@ -55,6 +54,9 @@
   .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
+  .hero .eyebrow{display:flex;align-items:center;justify-content:center;gap:14px}
+  .hero .eyebrow::before,.hero .eyebrow::after{content:"";width:5px;height:5px;border-radius:50%;
+    background:var(--lavender);flex:none}
   .eyebrow{font-family:var(--sans);font-weight:500;letter-spacing:.42em;text-transform:uppercase;
     font-size:.72rem;color:var(--rose);margin:0 0 16px}
 
@@ -74,10 +76,14 @@
     font-size:clamp(3.2rem,14vw,6.6rem);letter-spacing:.01em;text-wrap:balance}
   .names .amp{display:block;font-style:italic;font-weight:400;color:var(--rose);
     font-size:.4em;margin:.08em 0;letter-spacing:.02em}
-  .names-dev{font-family:var(--sans);font-weight:300;color:var(--ink-soft);
+  .names-dev{font-family:var(--sans);font-weight:400;color:var(--champagne-ink);
     font-size:clamp(1.05rem,4.5vw,1.5rem);margin:14px 0 0;letter-spacing:.05em}
-  .hero-date{font-family:var(--serif);font-style:italic;color:var(--ink-soft);
-    font-size:clamp(1.1rem,4vw,1.4rem);margin:22px 0 0}
+  .hero-date{display:inline-block;margin:24px 0 0;padding:11px 26px;
+    border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.5);
+    font-family:var(--sans);font-weight:500;color:var(--rose-deep);
+    font-size:clamp(.62rem,2.5vw,.72rem);letter-spacing:.2em;text-transform:uppercase}
+  .hero-rule{display:block;width:56px;height:1px;margin:22px auto 0;
+    background:linear-gradient(90deg,transparent,var(--champagne),transparent)}
   .countdown{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:30px 0 0}
   .cd-unit{min-width:66px;padding:13px 8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
   .cd-num{font-family:var(--serif);font-size:1.9rem;line-height:1;color:var(--rose-deep);font-variant-numeric:tabular-nums}
@@ -174,9 +180,16 @@
   @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
   @media (prefers-reduced-motion:reduce){.live-dot{animation:none}}
 
-  .composer{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 20px;margin:0 0 26px;
+  /* Filled accent block. Only pure white clears AA on this ground, so the
+     heading and labels stay white rather than a tinted off-white. */
+  .composer{background:var(--rose);border:1px solid transparent;border-radius:14px;padding:26px 22px;margin:0 0 26px;
     box-shadow:0 12px 30px var(--shadow)}
-  .composer h3{font-family:var(--serif);font-weight:500;font-size:1.5rem;margin:0 0 14px;text-align:center;color:var(--ink-strong)}
+    .composer h3{font-family:var(--serif);font-weight:500;font-size:1.65rem;margin:0 0 18px;text-align:center;color:#fff}
+  .composer .field label{color:#F4F0FB}
+  .composer .btn{background:#fff;color:var(--rose-deep)}
+  .composer .btn:hover{background:#fff;color:var(--rose-deep);box-shadow:0 10px 24px rgba(46,39,64,.28)}
+  .composer .note{color:#F4F0FB}
+  .composer input:focus,.composer textarea:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.4)}
   .field{margin:0 0 14px}
   .field label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:7px}
   input[type=text],textarea{width:100%;background:var(--field);border:1px solid var(--line);border-radius:8px;

@@ -21,7 +21,7 @@
     radial-gradient(1100px 700px at 50% 38%, rgba(255, 255, 255, 0.92), transparent 62%),
     radial-gradient(900px 600px at 80% -6%, rgba(217, 184, 106, 0.2), transparent 60%),
     radial-gradient(760px 540px at 8% 10%, rgba(155, 127, 191, 0.18), transparent 58%),
-    var(--bg, #F6F2FA);
+    var(--bg, #F2EEF8);
   transition: opacity 0.75s ease, visibility 0.75s;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .envelope:focus-visible {
-  outline: 2px solid var(--rose, #7B5EA7);
+  outline: 2px solid var(--rose, #7460A6);
   outline-offset: 18px;
   border-radius: 6px;
 }
@@ -206,7 +206,7 @@
   font-weight: 500;
   font-size: clamp(1.5rem, 6.2vw, 2.1rem);
   letter-spacing: 0.02em;
-  color: var(--ink-strong, #2A2033);
+  color: var(--ink-strong, #2E2740);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
@@ -214,7 +214,7 @@
   display: block;
   margin: 5px 0;
   font-size: 0.6rem;
-  color: var(--gold, #D9B86A);
+  color: var(--gold, #C6A85A);
 }
 
 .env-to {
@@ -224,7 +224,7 @@
   font-size: clamp(0.56rem, 2.1vw, 0.68rem);
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--ink-faint, #6E5E7C);
+  color: var(--ink-faint, #6B6080);
 }
 
 /* --- flap --------------------------------------------------------------- */
@@ -282,7 +282,7 @@
   background:
     radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.4), transparent 44%),
     radial-gradient(circle at 70% 76%, rgba(0, 0, 0, 0.32), transparent 52%),
-    linear-gradient(150deg, #9878C4, #7B5EA7 56%, #5A3F84);
+    linear-gradient(150deg, #9079C2, #7460A6 56%, #55417E);
   box-shadow:
     0 8px 18px rgba(74, 56, 96, 0.4),
     inset 0 -2px 6px rgba(50, 30, 80, 0.4),
@@ -357,7 +357,7 @@
   font-size: 0.56rem;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--rose, #7B5EA7);
+  color: var(--rose, #7460A6);
 }
 
 .card-names {
@@ -366,7 +366,7 @@
   font-weight: 500;
   line-height: 0.96;
   font-size: clamp(1.9rem, 8.5vw, 2.9rem);
-  color: var(--ink-strong, #2A2033);
+  color: var(--ink-strong, #2E2740);
 }
 
 .card-amp {
@@ -375,7 +375,7 @@
   font-weight: 400;
   font-size: 0.42em;
   margin: 0.1em 0;
-  color: var(--rose, #7B5EA7);
+  color: var(--rose, #7460A6);
 }
 
 .card-rule {
@@ -383,7 +383,7 @@
   width: 54px;
   height: 1px;
   margin: 14px 0 12px;
-  background: linear-gradient(90deg, transparent, var(--gold, #D9B86A), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #C6A85A), transparent);
 }
 
 .card-date {
@@ -391,7 +391,7 @@
   font-family: var(--serif, Georgia, serif);
   font-style: italic;
   font-size: 1rem;
-  color: var(--ink-soft, #665573);
+  color: var(--ink-soft, #5F5473);
 }
 
 .card-place {
@@ -400,7 +400,7 @@
   font-size: 0.55rem;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--ink-faint, #6E5E7C);
+  color: var(--ink-faint, #6B6080);
 }
 
 .intro--rising .card {
@@ -430,7 +430,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--ink-faint, #6E5E7C);
+  color: var(--ink-faint, #6B6080);
   transition: opacity 0.4s ease;
 }
 
@@ -438,7 +438,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--rose, #7B5EA7);
+  background: var(--rose, #7460A6);
   animation: cue-bob 1.9s ease-in-out infinite;
 }
 
@@ -465,13 +465,13 @@
   font-size: 0.62rem;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--ink-faint, #6E5E7C);
+  color: var(--ink-faint, #6B6080);
   cursor: pointer;
   transition: color 0.25s ease, opacity 0.4s ease;
 }
 
 .intro-skip:hover {
-  color: var(--rose, #7B5EA7);
+  color: var(--rose, #7460A6);
 }
 
 .intro--breaking .intro-cue,
