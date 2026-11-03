@@ -15,11 +15,6 @@ export default function Story() {
         and become who we are today, finding a little more of ourselves in each other along the way.
       </p>
       <p>
-        We&rsquo;re poles apart in so many ways, yet somehow, we fit together just right. In each
-        other, we&rsquo;ve found our safest place, our greatest comfort, and a love that makes even
-        the most ordinary days feel special.
-      </p>
-      <p>
         And through all these years, we&rsquo;ve never stopped being dance partners. The music may
         have changed, but we&rsquo;ve always found our way back to the same rhythm.
       </p>
