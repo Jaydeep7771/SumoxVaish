@@ -12,7 +12,7 @@ const BEATS = {
   done: 2250,
 };
 
-export default function Intro({ onDone }) {
+export default function Intro({ onDone, onOpen }) {
   const [phase, setPhase] = useState('idle');
   const timers = useRef([]);
 
@@ -25,6 +25,10 @@ export default function Intro({ onDone }) {
 
   function open() {
     if (phase !== 'idle') return;
+
+    /* First thing, synchronously: iOS only allows audio to start from inside
+       the gesture's own call stack, so this cannot wait for the animation. */
+    onOpen?.();
 
     const reduced =
       typeof window !== 'undefined' &&

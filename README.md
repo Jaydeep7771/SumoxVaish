@@ -92,21 +92,34 @@ Two consequences worth knowing:
 
 ### Music
 
-The envelope click starts `src/assets/background-music.mp3` and a Pause/Play pill appears top
-right. The filename is generic so swapping the track needs no code change.
-Browsers only allow audio after a user gesture, which is why playback starts on the envelope
-click. The intro is only shown once a session, so on a reload there is no gesture and the browser
-refuses. When that happens the player arms a one-shot listener and starts on the guest's next tap,
-click or key press, so it still feels automatic rather than leaving a Play button they must find.
+The track is `src/assets/background-music.mp3`; the filename is generic so swapping it needs no
+code change.
 
-An explicit Pause is different: it is remembered in `localStorage` and honoured, and it also
-cancels any pending auto-start. If the music seems not to start at all, that preference is the
-first thing to check -- clear `sumoxvaish:music-off`.
+**Playback starts inside the envelope's click handler**, not after the opening animation. That is
+deliberate and not a detail to "tidy up": iOS Safari only honours `play()` when it is called in
+the call stack of the gesture itself, so starting it from the animation's timer would be refused
+there. It is also why the `<audio>` element mounts while the envelope is still closed, and why
+`Intro` takes an `onOpen` callback that fires before anything else in `open()`. Measured gap from
+click to sound: ~30ms.
 
-The track is a 1m05s loop at 320kbps stereo (2.5MB). It is only fetched when playback starts
-(`preload="none"`) and streams progressively, so it begins well before the whole file arrives.
-Re-encoding to ~128kbps would cut it to roughly 1MB with no audible difference at background
-volume, which is worth doing if guests on mobile data are a concern.
+There are three ways in, in order:
+
+1. the envelope click, synchronous with the gesture;
+2. `autoStart`, for a reload where the intro is skipped (it is shown once a session);
+3. if the browser refuses that, a one-shot listener starts it on the guest's next tap or key press.
+
+An explicit Pause outranks all three, is remembered in `localStorage`, and cancels any pending
+auto-start. If the music seems not to start at all, check that preference first --
+clear `sumoxvaish:music-off`.
+
+The fade-in uses `requestAnimationFrame`, which browsers **pause entirely while the tab is
+hidden**. A guest who switches apps during the 1.4s fade would otherwise return to music playing
+at volume 0, silently, forever. A `setTimeout` lands the final volume regardless of whether a
+single frame ever ran.
+
+The track is a 1m05s loop at 320kbps stereo (2.5MB), `preload="auto"` so it is ready the instant
+the envelope is clicked. Re-encoding to ~128kbps would cut it to roughly 1MB with no audible
+difference at background volume.
 
 ### Environment variables
 

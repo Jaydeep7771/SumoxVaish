@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Intro from './components/Intro.jsx';
 import MusicToggle from './components/MusicToggle.jsx';
 import Hero from './components/Hero.jsx';
@@ -30,6 +30,8 @@ function shouldShowIntro() {
 
 export default function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
+  /* Set by MusicToggle; called by the envelope the moment it is clicked. */
+  const playMusic = useRef(null);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -48,10 +50,13 @@ export default function App() {
 
   return (
     <>
-      {introDone ? null : <Intro onDone={finishIntro} />}
+      {introDone ? null : (
+        <Intro onDone={finishIntro} onOpen={() => playMusic.current?.()} />
+      )}
 
-      {/* Starts on the envelope click -- the gesture browsers require. */}
-      <MusicToggle start={introDone} />
+      {/* The audio element mounts immediately so the envelope can start it;
+          the toggle button only appears once the page is revealed. */}
+      <MusicToggle autoStart={introDone} showButton={introDone} playRef={playMusic} />
 
       <div className="page">
         <Hero />
