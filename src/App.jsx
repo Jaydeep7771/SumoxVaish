@@ -6,7 +6,8 @@ import SectionHead from './components/SectionHead.jsx';
 import Story from './components/Story.jsx';
 import Proposal from './components/Proposal.jsx';
 import Events from './components/Events.jsx';
-import SidePicker from './components/SidePicker.jsx';
+import SideGate from './components/SideGate.jsx';
+import SideNote from './components/SideNote.jsx';
 import Footer from './components/Footer.jsx';
 
 /* These two pull in the Supabase client, which is larger than the rest of the
@@ -55,11 +56,15 @@ export default function App() {
     }
   }
 
+  /* The question only makes sense once the envelope is open, and the page
+     stays locked behind it until a side is chosen. */
+  const askingSide = introDone && !side;
+
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle('intro-open', !introDone);
+    root.classList.toggle('intro-open', !introDone || askingSide);
     return () => root.classList.remove('intro-open');
-  }, [introDone]);
+  }, [introDone, askingSide]);
 
   function finishIntro() {
     try {
@@ -78,7 +83,13 @@ export default function App() {
 
       {/* The audio element mounts immediately so the envelope can start it;
           the toggle button only appears once the page is revealed. */}
-      <MusicToggle autoStart={introDone} showButton={introDone} playRef={playMusic} />
+      {askingSide ? <SideGate onChoose={chooseSide} /> : null}
+
+      <MusicToggle
+        autoStart={introDone}
+        showButton={introDone && !askingSide}
+        playRef={playMusic}
+      />
 
       <div className="page">
         <Hero />
@@ -94,7 +105,7 @@ export default function App() {
         <Proposal />
 
         <SectionHead eyebrow="Celebrations" title="The festivities" />
-        <SidePicker side={side} onChange={chooseSide} />
+        <SideNote side={side} onChange={chooseSide} />
         <Events side={side} />
 
         <SectionHead

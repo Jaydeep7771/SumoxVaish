@@ -144,11 +144,18 @@ are permanent.
 
 ## Which side are you from
 
-Under "The festivities" a guest picks **Bride side** or **Groom side**, and the event list filters
-to theirs. The choice is remembered in `localStorage` so they only pick once.
+The arrival sequence is **envelope -> question -> site**:
 
-Which events belong to which side lives in the `sides` field of each event in
-`src/data/events.js` -- not in the component. Today only the two Mehendis are side-specific:
+1. The envelope covers the page. Clicking it starts the music and plays the opening.
+2. A full-screen card asks which side the guest is from. The page stays locked behind it.
+3. On choosing, the card fades and the site appears, filtered to their celebrations.
+
+Both answers are remembered in `localStorage`, so a returning guest goes **straight to the site** --
+no envelope, no question. Someone who leaves at the question and comes back gets the question
+again without the envelope, since it has already been seen this session.
+
+Which events belong to which side is the `sides` field on each event in `src/data/events.js`, not
+logic in a component. Today only the two Mehendis are side-specific:
 
 | Event | Bride | Groom |
 |---|---|---|
@@ -158,14 +165,22 @@ Which events belong to which side lives in the `sides` field of each event in
 | Haldi Ceremony | yes | yes |
 | The Wedding | yes | yes |
 
-Two deliberate behaviours:
+Getting those values wrong sends people to the wrong house, so change them deliberately.
 
-- **No choice shows everything.** A guest who scrolls past the picker must never see fewer events
-  than they are invited to, so the unfiltered list is the default rather than an empty one.
-- **Tapping the selected side again clears the filter**, and both buttons stay on screen with the
-  chosen one filled. A guest who picks wrong is never left hunting for the way back.
+Notes on the pieces:
 
-Getting the `sides` values wrong sends people to the wrong house, so change them deliberately.
+- `SideGate.jsx` is the full-screen question. Its z-index is 90, below the intro's 100, so the
+  envelope always sits on top while it is still there.
+- `SideNote.jsx` is the quiet "Showing the groom side celebrations. Change" line under the
+  festivities -- not the question a second time. **Change** simply clears the saved side, which
+  brings the gate back, so switching needs no interface of its own.
+- `Events` with no side renders every event. That path is only reachable by clearing storage
+  mid-session, but it fails open rather than showing someone an empty schedule.
+- The music toggle is hidden while the question is up, then returns with the page. The track keeps
+  playing through the transition -- it started on the envelope click.
+
+To see the whole sequence again, clear `sumoxvaish:side` and `sumoxvaish:intro-seen`, or open the
+site with `?intro` after clearing the side.
 
 ## Layout
 
@@ -184,8 +199,8 @@ src/
   useReveal.js          scroll-in animation
   data/events.js        event list, bride/groom sides, countdown target
   assets/               photos and monogram, imported as modules
-  components/           Intro, Hero, Story, Proposal, Events, SidePicker,
-                        WishingWall, Playlist, Footer, Reveal, SectionHead
+  components/           Intro, SideGate, SideNote, Hero, Story, Proposal,
+                        Events, WishingWall, Playlist, Footer, Reveal, SectionHead
 supabase/migrations/    the schema, in the order it was applied
 assets-source/          print-resolution masters -- gitignored, not built
 docs/                   the original single-file version, for reference
