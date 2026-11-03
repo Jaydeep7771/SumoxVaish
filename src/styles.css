@@ -160,6 +160,24 @@
     .proposals:focus-visible{outline:2px solid var(--rose);outline-offset:4px;border-radius:14px}
   }
 
+  /* --- which side are you from ------------------------------------------- */
+  .side-picker{text-align:center;padding-block:26px 4px}
+  .side-q{font-family:var(--serif);font-weight:500;font-size:clamp(1.3rem,5vw,1.7rem);
+    margin:0 0 18px;color:var(--ink-strong)}
+  .side-opts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .side-btn{font-family:var(--sans);font-weight:600;font-size:.74rem;letter-spacing:.14em;
+    text-transform:uppercase;padding:13px 30px;border-radius:999px;cursor:pointer;
+    background:var(--paper);color:var(--rose-deep);border:1px solid var(--line);
+    transition:background .2s ease,color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease}
+  .side-btn:hover{transform:translateY(-1px);border-color:var(--rose);
+    box-shadow:0 8px 20px var(--shadow)}
+  .side-btn:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+  .side-btn--on{background:var(--rose);color:#fff;border-color:var(--rose);
+    box-shadow:0 10px 24px rgba(116,96,166,.28)}
+  .side-btn--on:hover{background:var(--rose-deep);border-color:var(--rose-deep);color:#fff}
+  .side-note{margin:16px 0 0;font-size:.82rem;font-style:italic;color:var(--ink-faint)}
+  @media (max-width:380px){.side-btn{padding:12px 22px;font-size:.68rem}}
+
   /* events */
   .events{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding-block:26px 44px}
   .event{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 20px;text-align:center;

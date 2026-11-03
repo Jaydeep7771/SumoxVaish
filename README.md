@@ -142,6 +142,31 @@ rather than crashing.
 Open the project's Table Editor in the Supabase dashboard to edit or delete any row. Deletes there
 are permanent.
 
+## Which side are you from
+
+Under "The festivities" a guest picks **Bride side** or **Groom side**, and the event list filters
+to theirs. The choice is remembered in `localStorage` so they only pick once.
+
+Which events belong to which side lives in the `sides` field of each event in
+`src/data/events.js` -- not in the component. Today only the two Mehendis are side-specific:
+
+| Event | Bride | Groom |
+|---|---|---|
+| Engagement | yes | yes |
+| Groom Mehendi & Jago | -- | yes |
+| Bride Mehendi | yes | -- |
+| Haldi Ceremony | yes | yes |
+| The Wedding | yes | yes |
+
+Two deliberate behaviours:
+
+- **No choice shows everything.** A guest who scrolls past the picker must never see fewer events
+  than they are invited to, so the unfiltered list is the default rather than an empty one.
+- **Tapping the selected side again clears the filter**, and both buttons stay on screen with the
+  chosen one filled. A guest who picks wrong is never left hunting for the way back.
+
+Getting the `sides` values wrong sends people to the wrong house, so change them deliberately.
+
 ## Layout
 
 ```
@@ -157,9 +182,9 @@ src/
   intro.css             the envelope intro
   supabase.js           client + config guard
   useReveal.js          scroll-in animation
-  data/events.js        event list + countdown target
+  data/events.js        event list, bride/groom sides, countdown target
   assets/               photos and monogram, imported as modules
-  components/           Intro, Hero, Story, Proposal, Events,
+  components/           Intro, Hero, Story, Proposal, Events, SidePicker,
                         WishingWall, Playlist, Footer, Reveal, SectionHead
 supabase/migrations/    the schema, in the order it was applied
 assets-source/          print-resolution masters -- gitignored, not built

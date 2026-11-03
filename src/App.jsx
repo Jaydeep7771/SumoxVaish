@@ -6,6 +6,7 @@ import SectionHead from './components/SectionHead.jsx';
 import Story from './components/Story.jsx';
 import Proposal from './components/Proposal.jsx';
 import Events from './components/Events.jsx';
+import SidePicker from './components/SidePicker.jsx';
 import Footer from './components/Footer.jsx';
 
 /* These two pull in the Supabase client, which is larger than the rest of the
@@ -15,6 +16,7 @@ const WishingWall = lazy(() => import('./components/WishingWall.jsx'));
 const Playlist = lazy(() => import('./components/Playlist.jsx'));
 
 const SEEN_KEY = 'sumoxvaish:intro-seen';
+const SIDE_KEY = 'sumoxvaish:side';
 
 /* Shown once per browser session, so a guest reading the page does not have to
    reopen the envelope on every reload. Add ?intro to the URL to force it. */
@@ -32,6 +34,26 @@ export default function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
   /* Set by MusicToggle; called by the envelope the moment it is clicked. */
   const playMusic = useRef(null);
+
+  /* Which family a guest belongs to, remembered so they only pick once. */
+  const [side, setSide] = useState(() => {
+    try {
+      const saved = localStorage.getItem(SIDE_KEY);
+      return saved === 'bride' || saved === 'groom' ? saved : null;
+    } catch {
+      return null;
+    }
+  });
+
+  function chooseSide(next) {
+    setSide(next);
+    try {
+      if (next) localStorage.setItem(SIDE_KEY, next);
+      else localStorage.removeItem(SIDE_KEY);
+    } catch {
+      /* private mode -- the choice just will not persist */
+    }
+  }
 
   useEffect(() => {
     const root = document.documentElement;
@@ -72,7 +94,8 @@ export default function App() {
         <Proposal />
 
         <SectionHead eyebrow="Celebrations" title="The festivities" />
-        <Events />
+        <SidePicker side={side} onChange={chooseSide} />
+        <Events side={side} />
 
         <SectionHead
           eyebrow="For the couple"

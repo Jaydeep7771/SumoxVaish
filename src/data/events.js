@@ -1,6 +1,16 @@
 /* The wedding day itself is the countdown target: barat reception, 5 Dec 2026. */
 export const WEDDING_DATE = '2026-12-05T16:00:00+05:30';
 
+export const SIDES = {
+  bride: 'Bride side',
+  groom: 'Groom side',
+};
+
+const BOTH = ['bride', 'groom'];
+
+/* `sides` drives the filter under "The festivities". Only the two Mehendis are
+   side-specific; everything else is shared. Getting this wrong sends guests to
+   the wrong house, so change it deliberately. */
 export const events = [
   {
     mark: '✧',
@@ -8,6 +18,7 @@ export const events = [
     when: 'Mon · 30 Nov · 8:00 PM onwards',
     where: 'Wonderland Farms, Jalandhar',
     dress: 'Evening elegance',
+    sides: BOTH,
   },
   {
     mark: '✺',
@@ -15,6 +26,7 @@ export const events = [
     when: 'Wed · 2 Dec · 12:00 PM onwards',
     where: 'Manchanda House, Jalandhar',
     dress: 'Fresh greens & yellows',
+    sides: ['groom'],
   },
   {
     mark: '♪',
@@ -22,6 +34,7 @@ export const events = [
     when: 'Thu · 3 Dec · 6:00 PM onwards',
     where: '16, Gulmohar Block, Dhakoli, Punjab',
     dress: 'Mehendi brights',
+    sides: ['bride'],
   },
   {
     mark: '☀',
@@ -29,6 +42,7 @@ export const events = [
     when: 'Fri · 4 Dec · 11:00 AM onwards',
     where: 'Sohi Banquets, Zirakpur, Punjab',
     dress: 'Marigold & white',
+    sides: BOTH,
   },
   {
     mark: '✸',
@@ -36,6 +50,7 @@ export const events = [
     when: 'Sat · 5 Dec · Reception of Barat 4:00 PM · Dinner 8:00 PM · Doli 4:00 AM',
     where: 'The Grandeur, Zirakpur, Punjab',
     dress: 'Traditional finery',
+    sides: BOTH,
     full: true,
   },
 ];
