@@ -24,7 +24,7 @@ export const events = [
     mark: '✺',
     name: 'Groom Mehendi & Jago',
     when: 'Wed · 2 Dec · 12:00 PM onwards',
-    where: 'Manchanda House, Jalandhar',
+    where: 'Manchanda Darbar, Jalandhar',
     dress: 'Fresh greens & yellows',
     sides: ['groom'],
   },
