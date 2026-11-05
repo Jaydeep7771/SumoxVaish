@@ -33,7 +33,7 @@ export const events = [
     name: 'Bride Mehendi & Dholki',
     when: 'Thu · 3 Dec · 6:00 PM onwards',
     where: '16, Gulmohar Block, Dhakoli, Punjab',
-    dress: 'Traditional folk, bright colours',
+    dress: 'Traditional Folk, Bright Colours',
     sides: ['bride'],
   },
   {
@@ -48,7 +48,7 @@ export const events = [
     mark: '♫',
     name: 'Dawat-e-DJ',
     when: 'Fri · 4 Dec · 8:00 PM onwards',
-    where: 'Clarion Inn',
+    where: 'Clarion Inn, Dhakoli, Punjab',
     dress: 'Dress to dance',
     sides: BOTH,
   },
