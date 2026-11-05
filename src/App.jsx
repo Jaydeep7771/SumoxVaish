@@ -111,7 +111,7 @@ export default function App() {
       />
 
       <div className="page">
-        <Hero />
+        <Hero side={side} />
 
         <SectionHead eyebrow="Our story" title="From dance partners to partners for life" />
         <Story />
@@ -145,7 +145,7 @@ export default function App() {
           <Playlist />
         </Suspense>
 
-        <Footer />
+        <Footer side={side} />
       </div>
     </>
   );
