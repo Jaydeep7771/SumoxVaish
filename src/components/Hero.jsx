@@ -28,7 +28,7 @@ export default function Hero() {
           fetchPriority="high"
         />
       </picture>
-      <p className="eyebrow">Together with our families</p>
+      <p className="eyebrow">Together with our families, join us as we celebrate</p>
       <h1 className="names">
         Sumit<span className="amp">&amp;</span>Vaishali
       </h1>
