@@ -55,6 +55,8 @@
   --env-w: min(430px, 84vw);
   --env-h: calc(var(--env-w) * 0.68);
   --flap-h: calc(var(--env-h) * 0.5);
+  /* Proportional, so it never re-collides with the copy on a narrow phone. */
+  --seal-d: calc(var(--env-w) * 0.16);
   --env-paper: #FBF5EA;
   --env-shade: #F1E6D2;
   --paper-edge: rgba(58, 46, 69, 0.16);
@@ -194,7 +196,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 11%;
+  bottom: 8%;
   text-align: center;
   padding: 0 14px;
 }
@@ -270,9 +272,9 @@
 .seal {
   position: absolute;
   left: 50%;
-  top: calc(var(--flap-h) - 34px);
-  width: 68px;
-  height: 68px;
+  top: calc(var(--flap-h) - var(--seal-d) / 2);
+  width: var(--seal-d);
+  height: var(--seal-d);
   transform: translateX(-50%) translateZ(26px);
   display: flex;
   align-items: center;
@@ -293,7 +295,7 @@
 .seal-mono {
   font-family: var(--serif, Georgia, serif);
   font-weight: 600;
-  font-size: 0.98rem;
+  font-size: calc(var(--seal-d) * 0.29);
   letter-spacing: 0.02em;
   color: rgba(255, 252, 248, 0.95);
   text-shadow: 0 1px 1px rgba(40, 24, 64, 0.45);
@@ -526,16 +528,33 @@ html.intro-open body {
   }
 }
 
+/* On a phone the envelope is narrow, so at the desktop proportions the area
+   below the flap tip cannot hold the copy and the seal lands on top of "You
+   are invited". Give the envelope more height, raise the flap crease, and
+   shrink the seal, so the copy has room underneath it. */
+@media (max-width: 480px) {
+  .envelope {
+    --env-h: calc(var(--env-w) * 0.76);
+    --flap-h: calc(var(--env-h) * 0.43);
+  }
+  .env-invited {
+    font-size: clamp(1.3rem, 5.6vw, 1.7rem);
+  }
+}
+
 @media (max-width: 420px) {
   .intro-cue {
     margin-top: 38px;
   }
-  .seal {
-    width: 58px;
-    height: 58px;
-    top: calc(var(--flap-h) - 29px);
+}
+
+/* On the narrowest phones the ornament is what tips the copy into the seal,
+   and it is the least of the three lines, so it goes rather than the words. */
+@media (max-width: 380px) {
+  .env-flourish {
+    display: none;
   }
-  .seal-mono {
-    font-size: 0.84rem;
+  .env-invited {
+    margin-bottom: 7px;
   }
 }

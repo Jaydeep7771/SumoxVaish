@@ -232,6 +232,10 @@ animates on the compositor, and there is no WebGL fallback to worry about.
   Add `?intro` to the URL to force it. To show it on every load, drop the `sessionStorage` check in
   `shouldShowIntro()` in `src/App.jsx`.
 - `prefers-reduced-motion` skips straight to the site, and there is a Skip button either way.
+- The wax seal is sized from `--seal-d`, a fraction of the envelope width, not a pixel value.
+  It sits on the flap crease, and the copy sits below it, so a fixed size collides with
+  "You are invited" once the envelope gets narrow. If you change the seal, the flap ratio or
+  the copy, re-check the gap at 320px as well as on desktop -- 320 is where it fails first.
 
 ## Theme
 
