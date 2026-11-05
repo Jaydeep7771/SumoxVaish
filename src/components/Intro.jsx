@@ -93,7 +93,7 @@ export default function Intro({ onDone, onOpen }) {
             <div className="card-inner">
               <p className="card-eyebrow">Together with our families</p>
               <p className="card-names">
-                Vaishali<span className="card-amp">&amp;</span>Sumit
+                Sumit<span className="card-amp">&amp;</span>Vaishali
               </p>
               <span className="card-rule" aria-hidden="true" />
               <p className="card-date">5 December 2026</p>
@@ -112,7 +112,7 @@ export default function Intro({ onDone, onOpen }) {
               <span className="env-flourish" aria-hidden="true">
                 ✦
               </span>
-              <p className="env-to">to the wedding of Vaishali &amp; Sumit</p>
+              <p className="env-to">to the wedding of Sumit &amp; Vaishali</p>
             </div>
           </div>
 

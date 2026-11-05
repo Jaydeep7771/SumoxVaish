@@ -24,15 +24,15 @@ export default function Hero() {
           sizes={HERO_SIZES}
           width="420"
           height="628"
-          alt="Vaishali and Sumit running hand in hand through a meadow at sunset"
+          alt="Sumit and Vaishali running hand in hand through a meadow at sunset"
           fetchPriority="high"
         />
       </picture>
       <p className="eyebrow">Together with our families</p>
       <h1 className="names">
-        Vaishali<span className="amp">&amp;</span>Sumit
+        Sumit<span className="amp">&amp;</span>Vaishali
       </h1>
-      <p className="names-dev">वैशाली &amp; सुमित</p>
+      <p className="names-dev">सुमित &amp; वैशाली</p>
       <p className="hero-date">Sat · 5 Dec 2026 · The Grandeur, Zirakpur</p>
       <span className="hero-rule" aria-hidden="true" />
       <Countdown />

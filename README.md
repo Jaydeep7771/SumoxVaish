@@ -1,4 +1,4 @@
-# Vaishali & Sumit
+# Sumit & Vaishali
 
 Wedding site — React (Vite) front end with Node serverless API routes, ready to deploy on Vercel.
 

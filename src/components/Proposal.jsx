@@ -24,7 +24,7 @@ const photos = [
     src: photo3,
     width: 1070,
     height: 1600,
-    alt: 'Vaishali and Sumit sitting together among flowers, she is holding sunflowers',
+    alt: 'Sumit and Vaishali sitting together among flowers, she is holding sunflowers',
   },
 ];
 

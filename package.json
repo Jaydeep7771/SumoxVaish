@@ -2,7 +2,7 @@
   "name": "sumo-x-vaish",
   "private": true,
   "version": "1.0.0",
-  "description": "Wedding site for Vaishali & Sumit, 5 December 2026.",
+  "description": "Wedding site for Sumit & Vaishali, 5 December 2026.",
   "type": "module",
   "engines": {
     "node": ">=20"
