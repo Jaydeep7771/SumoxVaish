@@ -10,9 +10,9 @@ export default function Story() {
       </p>
       <p>
         From graduations and first jobs to moving across the world and building a little life of our
-        own, we&rsquo;ve been by each other&rsquo;s side through it all. Our first car, our first
-        home, and all the little moments in between. We&rsquo;ve watched each other grow, change,
-        and become who we are today, finding a little more of ourselves in each other along the way.
+        own, we&rsquo;ve been by each other&rsquo;s side through it all. We&rsquo;ve watched each
+        other grow, change, and become who we are today, finding a little more of ourselves in each
+        other along the way.
       </p>
       <p>
         And through all these years, we&rsquo;ve never stopped being dance partners. The music may
