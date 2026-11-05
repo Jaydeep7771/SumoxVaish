@@ -161,7 +161,7 @@ logic in a component. Today only the two Mehendis are side-specific:
 |---|---|---|
 | Engagement | yes | yes |
 | Groom Mehendi & Jago | -- | yes |
-| Bride Mehendi | yes | -- |
+| Bride Mehendi & Dholki | yes | -- |
 | Haldi Milan | yes | yes |
 | Dawat-e-DJ | yes | yes |
 | The Wedding | yes | yes |
