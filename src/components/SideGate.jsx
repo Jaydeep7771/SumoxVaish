@@ -33,10 +33,6 @@ export default function SideGate({ onChoose }) {
         <h2 className="side-gate-q" id="side-gate-q">
           Which side are you from?
         </h2>
-        <p className="side-gate-sub">
-          So we can show you the celebrations you&rsquo;re invited to.
-        </p>
-
         <div className="side-opts">
           {Object.entries(SIDES).map(([key, label], i) => (
             <button
